@@ -203,9 +203,13 @@ Array quickSort(Array data) {
 For example, let’s look at a list of numbers and do a radix sort using a 1-bit radix. Notice that it takes us 4 steps to get our final result, and that on each step we setup exactly two buckets:
 
 > {6, 9, 1, 4, 15, 12, 5, 6, 7, 11}
+>
 > {6, 4, 12, 6} {9, 1, 15, 5, 7, 11}
+>
 > {4, 12, 9, 1, 5} {6, 6, 15, 7, 11}
+>
 > {9, 1, 11} {4, 12, 5, 6, 6, 15, 7}
+>
 > {1, 4, 5, 6, 6, 7} {9, 11, 12, 15}
 
 Radix sort visualization
