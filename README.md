@@ -6,7 +6,11 @@
 > This repo is an **organized collection** of resources to help you learn algorithm.
 
 * [Data Structures](#data-structures)
+	* [Trees](#trees)
+		* [Binary Trees](#binary-trees)
+		* [Tries Trees](#tries-trees)
 * [Sorting](#sorting)
+* [Binary Search](#binary-search)
 * [Dynamic Programming](#dynamic-programming)
 * [Interview Question](#interview-question)
 
@@ -95,18 +99,41 @@ while (queue.isNotEmpty()) {
 ```
 **Stacks**, the opposite of queues, in that they are described as "last in, first out". The classic example is the pile of plates at the local buffet. The workers can continue to add clean plates to the stack indefinitely, but every time, a visitor will remove from the stack the top plate, which is the last one that was added.
 
-**Trees**, a data structure consisting of one or more data nodes. The first node is called the "root", and each node has zero or more "child nodes". The maximum number of children of a single node, and the maximum depth of children are limited in some cases by the exact type of data represented by the tree.
-
-**Binary Trees**, a special type of tree is a binary tree. A binary tree also happens to be one of the most efficient ways to store and read a set of records that can be indexed by a key value in some way. The idea behind a binary tree is that each node has, at most, two children.
-
 **Priority Queues**, a priority queue accepts states, and internally stores them in a method such that it can quickly pull out the state that has the least cost.
 
 **Hash Tables**, a unique data structure, and are typically used to implement a "dictionary" interface, whereby a set of keys each has an associated value. The key is used as an index to locate the associated values. This is not unlike a classical dictionary, where someone can find a definition (value) of a given word (key).
 
+### Trees
+a data structure consisting of one or more data nodes. The first node is called the "root", and each node has zero or more "child nodes". The maximum number of children of a single node, and the maximum depth of children are limited in some cases by the exact type of data represented by the tree.
+
+#### Binary Trees
+a special type of tree is a binary tree. A binary tree also happens to be one of the most efficient ways to store and read a set of records that can be indexed by a key value in some way. The idea behind a binary tree is that each node has, at most, two children.
+
+#### Tries Trees
+
+The word trie is an infix of the word “retrieval” because the trie can find a single word in a dictionary with only a prefix of the word.
+
+![Trie](https://linux.thai.net/~thep/datrie/trie1.gif)
+
+**Tripple-Array Trie**, For a transition from state s to t which takes character c as the input, the condition maintained in the tripple-array trie is:
+
+* $check[base[s] + c] = s$
+* $next[base[s] + c] = t$
+
+![Tripple-Array Trie](https://linux.thai.net/~thep/datrie/tripple.gif)
+
+**Double-Array Trie**, For a transition from state s to t which takes character c as the input, the condition maintained in the double-array trie is:
+
+* $check[base[s] + c] = s$
+* $base[s] + c = t$
+
+![Double-Array Trie](https://linux.thai.net/~thep/datrie/double.gif)
 
 ##### Source(s) and further reading
 
 * [Data Structures](https://www.topcoder.com/community/data-science/data-science-tutorials/data-structures/)
+* [Using Tries](https://www.topcoder.com/community/data-science/data-science-tutorials/using-tries/)
+* [An Implementation of Double-Array Trie](https://linux.thai.net/~thep/datrie/datrie.html)
 
 ## Sorting
 
@@ -222,6 +249,38 @@ https://www.cs.usfca.edu/~galles/visualization/RadixSort.html
 
 * [Sorting](https://www.topcoder.com/community/data-science/data-science-tutorials/sorting/)
 * [Radix Sort Visualization](https://www.cs.usfca.edu/~galles/visualization/RadixSort.html)
+
+## Binary Search
+
+Binary search is used to quickly find a value in a sorted sequence (consider a sequence an ordinary array for now).
+
+```plain
+binary_search(A, target):
+   lo = 1, hi = size(A)
+   while lo <= hi:
+      mid = lo + (hi-lo)/2
+      if A[mid] == target:
+         return mid            
+      else if A[mid] < target:
+         lo = mid+1
+      else:
+         hi = mid-1
+
+   // target was not found
+```
+
+> a number of workers need to examine a number of filing cabinets. The cabinets are not all of the same size and we are told for each cabinet how many folders it contains. We are asked to find an assignment such that each worker gets a sequential series of cabinets to go through and that it minimizes the maximum amount of folders that a worker would have to look through.
+>
+> 10 20 30 40 50 60 70 80 90
+> 10 20 30 40 50 | 60 70 | 80 90
+> 170 = 80 + 90 > 60 + 70 > 10 + 20 + 30 + 40 + 50
+
+ Solution: the minimum of the maximum amount of folders is `SUM(all folders) / NUM(worker)`, so just binary search between `SUM(all folders) / NUM(worker)` and `SUM(all folders)`.
+
+##### Source(s) and further reading
+
+* [Binary Search](https://www.topcoder.com/community/data-science/data-science-tutorials/binary-search/)
+
 
 ## Dynamic Programming
 
