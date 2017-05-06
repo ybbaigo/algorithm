@@ -7,6 +7,9 @@
 
 * [Data Structures](#data-structures)
 * [Sorting](#sorting)
+* [Dynamic Programming](#dynamic-programming)
+* [Interview Question](#interview-question)
+
 
 
 ## Data Structures
@@ -219,3 +222,93 @@ https://www.cs.usfca.edu/~galles/visualization/RadixSort.html
 
 * [Sorting](https://www.topcoder.com/community/data-science/data-science-tutorials/sorting/)
 * [Radix Sort Visualization](https://www.cs.usfca.edu/~galles/visualization/RadixSort.html)
+
+## Dynamic Programming
+
+A DP is an algorithmic technique which is usually based on a recurrent formula and one (or some) starting states. A sub-solution of the problem is constructed from previously found ones. DP solutions have a polynomial complexity which assures a much faster running time than other techniques like backtracking, brute-force etc.
+
+
+ > Given a list of N coins, their values (v1, v2, … , vn), and the total sum s. Find the minimum number of coins the sum of which is s (we can use as many coins of one type as we want), or report that it’s not possible to select coins in such a way that they sum up to s.
+
+Solution:
+
+```python
+# dp[i] means the minimum number of coins the sum of which is i
+
+dp = [-1] * s
+for i in xrange(s):
+    for j in xrange(n):
+        if i < v[j]:
+            continue
+        if dp[i] == -1 or dp[i] > dp[i - v[j]] + 1:
+            dp[i] = dp[i - v[j]] + 1
+```
+
+> Given a sequence of N numbers – A1 , A2 , …, AN . Find the length of the longest non-decreasing sequence.
+
+Solution:
+
+```python
+# dp[i] means the length of the longest non-decreasing sequence up to Ai
+
+dp = [1] * n
+for i in xrange(n):
+    for j in xrange(i):
+        if a[i] >= a[j] and dp[j] + 1 > dp[i]:
+            dp[i] = dp[j] + 1
+```
+The time complexity of above solution is O(N^2), the best solution is O(NLogN), check out further reading.
+
+> A table composed of N x M cells, each having a certain quantity of apples, is given. You start from the upper-left corner. At each step you can go down or right one cell. Find the maximum number of apples you can collect.
+
+Solution:
+
+```python
+# dp[i][j] means the maximum number of apples you can collect from upper-left corner to i * j cell.
+
+dp = [[0] * m] * n
+dp[0][0] = apple[0][0]
+for i in xrange(n):
+    for j in xrange(m):
+        if i > 0 && dp[i][j] < dp[i - 1][j] + apple[i][j]:
+            dp[i][j] = dp[i - 1][j] + apple[i][j]
+        if j > 0 && dp[i][j] < dp[i][j - 1] + apple[i][j]:
+            dp[i][j] = dp[i][j - 1] + apple[i][j]
+
+```
+
+> Given an undirected graph G having positive weights and N vertices. You start with having a sum of M money. For passing through a vertex i, you must pay S[i] money. If you don’t have enough money – you can’t pass through that vertex. Find the shortest path from vertex 1 to vertex N
+
+Solution:
+
+```python
+# dp[i][j] means the length of the shortest path from vertex 1 to vertex i with j money left
+
+dp[i][j - s[i]] = argmin(dp[k][j] + 1, if connected(k, i) and j - s[i] > 0)
+
+```
+
+> Given a matrix with M rows and N columns (N x M). In each cell there’s a number of apples. You start from the upper-left corner of the matrix. You can go down or right one cell. You need to arrive to the bottom-right corner. Then you need to go back to the upper-left cell by going each step one cell left or up. Having arrived at this upper-left cell, you need to go again back to the bottom-right cell. Find the maximum number of apples you can collect. When you pass through a cell – you collect all the apples left there.
+
+Solution:
+
+```python
+# dp[i][j][k][l] means the maximum number of apples you can collect from the upper-left corner to row l at i, j and k col. a[i][j] means the number of apple.
+
+dp[i][j][k][l] = max(
+    dp[i][j][k][l-1] + a[i][l] + a[j][l] + a[k][l],
+    dp[i - 1][j][k][l] + a[i][l],
+    dp[i][j - 1][k][l] + a[j][l],
+    dp[i][j][k - 1][l] + a[k][l])
+
+```
+
+##### Source(s) and further reading
+
+* [Dynamic Programming – From Novice to Advanced](https://www.topcoder.com/community/data-science/data-science-tutorials/dynamic-programming-from-novice-to-advanced/)
+* [Longest Increasing Subsequence Size (N log N)](http://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/)
+
+## Interview Question
+
+> For this popular algorithm interview question, the input will be a string consisting only of the characters 0, 1 and ?, where the ? acts as a wildcard that can be either a 0 or 1, and your goal is to print all possible combinations of the string. For example, if the string is "011?0" then your program should output a set of all strings, which are: ["01100", "01110"].
+```
