@@ -9,8 +9,11 @@
 	* [Trees](#trees)
 		* [Binary Trees](#binary-trees)
 		* [Tries Trees](#tries-trees)
+		* [Red-Black Trees](#red-black-trees)
 * [Sorting](#sorting)
-* [Binary Search](#binary-search)
+* [Searching](#searching)
+	* [Binary Search](#binary-search)
+	* [String Searching Algorithms](#string-searching-algorithms)
 * [Dynamic Programming](#dynamic-programming)
 * [Interview Question](#interview-question)
 
@@ -113,6 +116,23 @@ A binary tree is made of nodes, where each node contains a "left" pointer, a "ri
 
 ##### Binary Search Tree
 A **binary search tree** (BST) or "ordered binary tree" is a type of binary tree where the nodes are arranged in order: for each node, all elements in its left subtree are less-or-equal to the node (<=), and all the elements in its right subtree are greater than the node (>). The tree shown above is a binary search tree -- the "root" node is a 5, and its left subtree nodes (1, 3, 4) are <= 5, and its right subtree nodes (6, 9) are > 5. Recursively, each of the subtrees must also obey the binary search tree constraint: in the (1, 3, 4) subtree, the 3 is the root, the 1 <= 3 and 4 > 3. Watch out for the exact wording in the problems -- a "binary search tree" is different from a "binary tree".
+
+##### Red-Black Trees
+
+![r b t](https://upload.wikimedia.org/wikipedia/commons/6/66/Red-black_tree_example.svg)
+
+Red-Black Tree is a self-balancing Binary Search Tree (BST) where every node follows following rules.
+
+* Every node has a color either red or black.
+* The root is black. This rule is sometimes omitted. Since the root can always be changed from red to black, but not necessarily vice versa, this rule has little effect on analysis.
+* All leaves (NIL) are black.
+* If a node is red, then both its children are black.
+* Every path from a given node to any of its descendant NIL nodes contains the same number of black nodes. Some definitions: the number of black nodes from the root to a node is the node's black depth; the uniform number of black nodes in all paths from root to the leaves is called the black-height of the red–black tree.
+
+Operations
+
+* Search is same to normal BST
+* Insert and Remove require rotation, so that Red-Black Tree guaranteed height of O(log n) for n items
 
 ##### Binary Indexed Trees
 
@@ -218,6 +238,9 @@ The word trie is an infix of the word “retrieval” because the trie can find 
 * [Binary Indexed Tree or Fenwick Tree From Hackerearth](https://www.hackerearth.com/practice/notes/binary-indexed-tree-or-fenwick-tree/)
 * [Preliminary Concepts: Negative Binary Numbers](https://www.calvin.edu/academic/rit/webBook/chapter5/negative.htm)
 * [Two's Complement](https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html)
+* [An Introduction to Binary Search and Red-Black Trees](https://www.topcoder.com/community/data-science/data-science-tutorials/an-introduction-to-binary-search-and-red-black-trees/)
+* [RedBlack Tree Visualization](https://www.cs.usfca.edu/~galles/visualization/RedBlack.html)
+* [Red-black trees in 4 minutes](https://www.youtube.com/watch?v=qvZGUFHWChY)
 
 ## Sorting
 
@@ -334,7 +357,9 @@ https://www.cs.usfca.edu/~galles/visualization/RadixSort.html
 * [Sorting](https://www.topcoder.com/community/data-science/data-science-tutorials/sorting/)
 * [Radix Sort Visualization](https://www.cs.usfca.edu/~galles/visualization/RadixSort.html)
 
-## Binary Search
+## Searching
+
+### Binary Search
 
 Binary search is used to quickly find a value in a sorted sequence (consider a sequence an ordinary array for now).
 
@@ -363,9 +388,119 @@ binary_search(A, target):
 
  Solution: the minimum of the maximum amount of folders is `SUM(all folders) / NUM(worker)`, so just binary search between `SUM(all folders) / NUM(worker)` and `SUM(all folders)`.
 
+### String Searching Algorithms
+
+The fundamental string searching (matching) problem is defined as follows: given two strings – a text and a pattern, determine whether the pattern appears in the text. The problem is also known as “the needle in a haystack problem.”
+
+The “Naive” Method **brute force**, in the worst case it may take as much as (n * m) iterations to complete the task.
+
+```plain
+function NaiveSearch(string s[1..n], string pattern[1..m])
+    for i from 1 to n-m+1
+        for j from 1 to m
+            if s[i+j-1] != pattern[j]
+                jump to next iteration of outer loop
+        return i
+    return not found
+```
+
+**Rabin-Karp Algorithm** (RK), seeks to speed up the testing of equality of the pattern to the substrings in the text by using a hash function.
+
+```plain
+function RabinKarp(string s[1..n], string pattern[1..m])
+    hpattern := hash(pattern[1..m]);
+    for i from 1 to n-m+1
+        hs := hash(s[i..i+m-1])
+        if hs = hpattern
+            if s[i..i+m-1] = pattern[1..m]
+                return i
+    return not found
+```
+The key to the Rabin–Karp algorithm's performance is the efficient computation of hash values of the successive substrings of the text. The Rabin fingerprint is a popular and effective rolling hash function. The Rabin fingerprint treats every substring as a number in some base, the base being usually a large prime. For example, 101.
+
+> hash("abr") = (97 × 101^2) + (98 × 101^1) + (114 × 101^0) = 999,509
+>  rolling hash
+> hash("bra") = [101^1 × (999,509 - (97 × 101^2))] + (97 × 101^0) = 1,011,309
+
+**Knuth–Morris–Pratt Algorithm**
+
+To illustrate the algorithm's details, consider a (relatively artificial) run of the algorithm, where W = "ABCDABD" and S = "ABC ABCDAB ABCDABCDABDE". At any given time, the algorithm is in a state determined by two integers:
+
+* m, denoting the position within S where the prospective match for W begins,
+* i, denoting the index of the currently considered character in W.
+
+In each step the algorithm compares S[m+i] with W[i] and increments i if they are equal. This is depicted, at the start of the run, like
+
+```plain
+m: 01234567890123456789012
+S: ABC ABCDAB ABCDABCDABDE
+W: ABCDABD
+i: 0123456
+```
+
+The algorithm compares successive characters of W to "parallel" characters of S, moving from one to the next by incrementing i if they match. However, in the fourth step `S[3] = [ ]`  does not match `W[3] = [D]`. Rather than beginning to search again at S[1], we note that no 'A' occurs between positions 1 and 2 in W; hence, having checked all those characters previously (and knowing they matched the corresponding characters in S), there is no chance of finding the beginning of a match. Therefore, the algorithm sets m = 3 and i = 0.
+
+
+```plain
+m: 01234567890123456789012
+S: ABC ABCDAB ABCDABCDABDE
+W:    ABCDABD
+i:    0123456
+```
+
+This match fails at the initial character, so the algorithm sets m = 4 and i = 0
+
+```plain
+m: 01234567890123456789012
+S: ABC ABCDAB ABCDABCDABDE
+W:     ABCDABD
+i:     0123456
+```
+
+Here i increments through a nearly complete match "ABCDAB" until i = 6 giving a mismatch at W[6] and S[10]. However, just prior to the end of the current partial match, there was that substring "AB" that could be the beginning of a new match, so the algorithm must take this into consideration. As these characters match the two characters prior to the current position, those characters need not be checked again; the algorithm sets m = 8 (the start of the initial prefix) and i = 2 (signaling the first two characters match) and continues matching. Thus the algorithm not only omits previously matched characters of S (the "AB"), but also previously matched characters of W (the prefix "AB").
+
+```plain
+m: 01234567890123456789012
+S: ABC ABCDAB ABCDABCDABDE
+W:         ABCDABD
+i:         0123456
+```
+
+This search at the new position fails immediately because W[2] (a 'C') does not match S[10] (a ' '). As in the first trial, the mismatch causes the algorithm to return to the beginning of W and begins searching at the mismatched character position of S: m = 10, reset i = 0.
+
+```plain
+m: 01234567890123456789012
+S: ABC ABCDAB ABCDABCDABDE
+W:           ABCDABD
+i:           0123456
+```
+
+The match at m=10 fails immediately, so the algorithm next tries m = 11 and i = 0.
+
+```plain
+m: 01234567890123456789012
+S: ABC ABCDAB ABCDABCDABDE
+W:            ABCDABD
+i:            0123456
+```
+
+Once again, the algorithm matches "ABCDAB", but the next character, 'C', does not match the final character 'D' of the word W. Reasoning as before, the algorithm sets m = 15, to start at the two-character string "AB" leading up to the current position, set i = 2, and continue matching from the current position.
+
+```plain
+m: 01234567890123456789012
+S: ABC ABCDAB ABCDABCDABDE
+W:                ABCDABD
+i:                0123456
+```
+
+This time the match is complete, and the first character of the match is S[15].
+
+
 ##### Source(s) and further reading
 
 * [Binary Search](https://www.topcoder.com/community/data-science/data-science-tutorials/binary-search/)
+* [Rabin–Karp algorithm](https://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_algorithm)
+* [Knuth–Morris–Pratt algorithm](https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm)
 
 
 ## Dynamic Programming
