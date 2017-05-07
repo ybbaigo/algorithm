@@ -107,7 +107,85 @@ while (queue.isNotEmpty()) {
 a data structure consisting of one or more data nodes. The first node is called the "root", and each node has zero or more "child nodes". The maximum number of children of a single node, and the maximum depth of children are limited in some cases by the exact type of data represented by the tree.
 
 #### Binary Trees
-a special type of tree is a binary tree. A binary tree also happens to be one of the most efficient ways to store and read a set of records that can be indexed by a key value in some way. The idea behind a binary tree is that each node has, at most, two children.
+A binary tree is made of nodes, where each node contains a "left" pointer, a "right" pointer, and a data element. The "root" pointer points to the topmost node in the tree. The left and right pointers recursively point to smaller "subtrees" on either side. A null pointer represents a binary tree with no elements -- the empty tree. The formal recursive definition is: a binary tree is either empty (represented by a null pointer), or is made of a single node, where the left and right pointers (recursive definition ahead) each point to a binary tree.
+
+![Binary Trees](http://cslibrary.stanford.edu/110/binarytree.gif)
+
+##### Binary Search Tree
+A **binary search tree** (BST) or "ordered binary tree" is a type of binary tree where the nodes are arranged in order: for each node, all elements in its left subtree are less-or-equal to the node (<=), and all the elements in its right subtree are greater than the node (>). The tree shown above is a binary search tree -- the "root" node is a 5, and its left subtree nodes (1, 3, 4) are <= 5, and its right subtree nodes (6, 9) are > 5. Recursively, each of the subtrees must also obey the binary search tree constraint: in the (1, 3, 4) subtree, the 3 is the root, the 1 <= 3 and 4 > 3. Watch out for the exact wording in the problems -- a "binary search tree" is different from a "binary tree".
+
+##### Binary Indexed Trees
+
+Let us consider the following problem to understand Binary Indexed Tree.
+
+We have an array arr[0 . . . n-1]. We should be able to
+
+* Find the sum of first i elements.
+* Change value of a specified element of the array arr[i] = x where 0 <= i <= n-1.
+
+A simple solution is to run a loop from 0 to i-1 and calculate sum of elements. To update a value, simply do arr[i] = x. The first operation takes O(n) time and second operation takes O(1) time. Another simple solution is to create another array and store sum from start to i at the i’th index in this array. Sum of a given range can now be calculated in O(1) time, but update operation takes O(n) time now. This works well if the number of query operations are large and very few updates. We can perform both the operations in O(log n) time once given the array with **binary indexed trees**.
+
+Firstly, isolating the last set bit
+
+![Isolating the last set bit](https://he-s3.s3.amazonaws.com/media/uploads/5fd34b5.png)
+
+`x&(-x)` gives the last set bit in a number x. How? We use `two's complement` to represent negative numbers, write out the number in binary, then invert the digits, and add one to the result.
+
+```plain
+Example: x = 10(in decimal) = 1010(in binary)
+Two's complement: 1010 -> 0101 + 1 = 0110
+The last set bit is given by x&(-x) = (10)1(0) & (01)1(0) = 0010 = 2(in decimal)
+```
+
+Basic Idea of Binary Indexed Tree, We know the fact that each integer can be represented as sum of powers of two. Similarly, for a given array of size N, we can maintain an array BIT[] such that, at any index we can store sum of some numbers of the given array. This can also be called a partial sum tree.
+
+Let’s use an example to understand how BIT[] stores partial sums.
+
+> //for ease, we make sure our given array is 1-based indexed
+>
+> int a[] = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16};
+
+![enter image description here](https://he-s3.s3.amazonaws.com/media/uploads/68f2369.jpg)
+
+To generalize this every index i in the BIT[] array stores the cumulative sum from the index i to i - (1<<r) + 1 (both inclusive), where r represents the last set bit in the index i
+
+> Sum of first 12 numbers in array a[] = BIT[12] + BIT[8] = (a[12] + … + a[9]) + (a[8] + … + a[1])
+>
+> Similarly, sum of first 6 elements = BIT[6] + BIT[4] = (a[6] + a[5]) + (a[4] + … + a[1])
+>
+> Sum of first 8 elements = BIT[8] = a[8] + … + a[1]
+
+Here’s the full program to solve efficiently
+```cpp
+int BIT[1000], a[1000], n;
+void update(int x, int delta)
+{
+      for(; x <= n; x += x&-x)
+        BIT[x] += delta;
+}
+int query(int x)
+{
+     int sum = 0;
+     for(; x > 0; x -= x&-x)
+        sum += BIT[x];
+     return sum;
+}
+
+int main()
+{
+     scanf(“%d”, &n);
+     int i;
+     for(i = 1; i <= n; i++)
+     {
+           scanf(“%d”, &a[i]);
+           update(i, a[i]);
+     }
+     printf(“sum of first 10 elements is %d\n”, query(10));
+     printf(“sum of all elements in range [2, 7] is %d\n”, query(7) – query(2-1));
+     return 0;
+}
+```
+
 
 #### Tries Trees
 
@@ -134,6 +212,12 @@ The word trie is an infix of the word “retrieval” because the trie can find 
 * [Data Structures](https://www.topcoder.com/community/data-science/data-science-tutorials/data-structures/)
 * [Using Tries](https://www.topcoder.com/community/data-science/data-science-tutorials/using-tries/)
 * [An Implementation of Double-Array Trie](https://linux.thai.net/~thep/datrie/datrie.html)
+* [Binary Trees](http://cslibrary.stanford.edu/110/BinaryTrees.html)
+* [Binary Indexed Trees](https://www.topcoder.com/community/data-science/data-science-tutorials/binary-indexed-trees/)
+* [Binary Indexed Tree or Fenwick Tree From Geeksforgeeks](http://www.geeksforgeeks.org/binary-indexed-tree-or-fenwick-tree-2/)
+* [Binary Indexed Tree or Fenwick Tree From Hackerearth](https://www.hackerearth.com/practice/notes/binary-indexed-tree-or-fenwick-tree/)
+* [Preliminary Concepts: Negative Binary Numbers](https://www.calvin.edu/academic/rit/webBook/chapter5/negative.htm)
+* [Two's Complement](https://www.cs.cornell.edu/~tomf/notes/cps104/twoscomp.html)
 
 ## Sorting
 
@@ -272,8 +356,10 @@ binary_search(A, target):
 > a number of workers need to examine a number of filing cabinets. The cabinets are not all of the same size and we are told for each cabinet how many folders it contains. We are asked to find an assignment such that each worker gets a sequential series of cabinets to go through and that it minimizes the maximum amount of folders that a worker would have to look through.
 >
 > 10 20 30 40 50 60 70 80 90
+>
 > 10 20 30 40 50 | 60 70 | 80 90
-> 170 = 80 + 90 > 60 + 70 > 10 + 20 + 30 + 40 + 50
+>
+> the answer is 170 = 80 + 90 > 60 + 70 > 10 + 20 + 30 + 40 + 50
 
  Solution: the minimum of the maximum amount of folders is `SUM(all folders) / NUM(worker)`, so just binary search between `SUM(all folders) / NUM(worker)` and `SUM(all folders)`.
 
@@ -329,9 +415,9 @@ dp = [[0] * m] * n
 dp[0][0] = apple[0][0]
 for i in xrange(n):
     for j in xrange(m):
-        if i > 0 && dp[i][j] < dp[i - 1][j] + apple[i][j]:
+        if i > 0 and dp[i][j] < dp[i - 1][j] + apple[i][j]:
             dp[i][j] = dp[i - 1][j] + apple[i][j]
-        if j > 0 && dp[i][j] < dp[i][j - 1] + apple[i][j]:
+        if j > 0 and dp[i][j] < dp[i][j - 1] + apple[i][j]:
             dp[i][j] = dp[i][j - 1] + apple[i][j]
 
 ```
