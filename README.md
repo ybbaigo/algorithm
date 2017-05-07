@@ -8,8 +8,10 @@
 * [Data Structures](#data-structures)
 	* [Trees](#trees)
 		* [Binary Trees](#binary-trees)
-		* [Tries Trees](#tries-trees)
+		* [Binary Search Tree](#binary-search-tree)
 		* [Red-Black Trees](#red-black-trees)
+		* [Binary Indexed Trees](#binary-indexed-trees)
+		* [Tries Trees](#tries-trees)
 * [Sorting](#sorting)
 * [Searching](#searching)
 	* [Binary Search](#binary-search)
@@ -114,12 +116,12 @@ A binary tree is made of nodes, where each node contains a "left" pointer, a "ri
 
 ![Binary Trees](http://cslibrary.stanford.edu/110/binarytree.gif)
 
-##### Binary Search Tree
+#### Binary Search Tree
 A **binary search tree** (BST) or "ordered binary tree" is a type of binary tree where the nodes are arranged in order: for each node, all elements in its left subtree are less-or-equal to the node (<=), and all the elements in its right subtree are greater than the node (>). The tree shown above is a binary search tree -- the "root" node is a 5, and its left subtree nodes (1, 3, 4) are <= 5, and its right subtree nodes (6, 9) are > 5. Recursively, each of the subtrees must also obey the binary search tree constraint: in the (1, 3, 4) subtree, the 3 is the root, the 1 <= 3 and 4 > 3. Watch out for the exact wording in the problems -- a "binary search tree" is different from a "binary tree".
 
-##### Red-Black Trees
+#### Red-Black Trees
 
-![r b t](https://upload.wikimedia.org/wikipedia/commons/6/66/Red-black_tree_example.svg)
+![r b t](https://www.cs.auckland.ac.nz/software/AlgAnim/fig/rb_tree1a.gif)
 
 Red-Black Tree is a self-balancing Binary Search Tree (BST) where every node follows following rules.
 
@@ -134,7 +136,7 @@ Operations
 * Search is same to normal BST
 * Insert and Remove require rotation, so that Red-Black Tree guaranteed height of O(log n) for n items
 
-##### Binary Indexed Trees
+#### Binary Indexed Trees
 
 Let us consider the following problem to understand Binary Indexed Tree.
 
