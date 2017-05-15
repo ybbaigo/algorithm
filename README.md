@@ -16,6 +16,7 @@
 * [Searching](#searching)
 	* [Binary Search](#binary-search)
 	* [String Searching Algorithms](#string-searching-algorithms)
+* [Greedy](#greedy)
 * [Dynamic Programming](#dynamic-programming)
 * [Interview Question](#interview-question)
 
@@ -504,6 +505,23 @@ This time the match is complete, and the first character of the match is S[15].
 * [Rabin–Karp algorithm](https://en.wikipedia.org/wiki/Rabin%E2%80%93Karp_algorithm)
 * [Knuth–Morris–Pratt algorithm](https://en.wikipedia.org/wiki/Knuth%E2%80%93Morris%E2%80%93Pratt_algorithm)
 
+# Greedy
+
+A greedy algorithm, as the name suggests, **always makes the choice that seems to be the best at that moment**. This means that it makes a locally-optimal choice in the hope that this choice will lead to a globally-optimal solution.
+
+* It is quite easy to come up with a greedy algorithm (or even multiple greedy algorithms) for a problem.
+* Analyzing the run time for greedy algorithms will generally be much easier than for other techniques (like Divide and conquer). For the Divide and conquer technique, it is not clear whether the technique is fast or slow. This is because at each level of recursion the size of gets smaller and the number of sub-problems increases.
+* The difficult part is that for greedy algorithms you have to work much harder to understand correctness issues. Even with the correct algorithm, it is hard to prove why it is correct. Proving that a greedy algorithm is correct is more of an art than a science. It involves a lot of creativity.
+
+> You are given an array A of integers, where each element indicates the time a thing takes for completion. You want to calculate the maximum number of things that you can do in the limited time that you have.
+
+This is a simple Greedy-algorithm problem. In each iteration, you have to greedily select the things which will take the minimum amount of time to complete while maintaining two variables currentTime and numberOfThings.
+
+##### Source(s) and further reading
+
+* [Greedy is Good](https://www.topcoder.com/community/data-science/data-science-tutorials/greedy-is-good/)
+* [Basics of Greedy Algorithms](https://www.hackerearth.com/practice/algorithms/greedy/basics-of-greedy-algorithms/tutorial/)
+* [Greedy algorithm](https://en.wikipedia.org/wiki/Greedy_algorithm)
 
 ## Dynamic Programming
 
@@ -585,10 +603,25 @@ dp[i][j][k][l] = max(
 
 ```
 
+**Knapsack problem**, Given a set of items, each with a weight and a value, determine the number of each item to include in a collection so that the total weight is less than or equal to a given limit and the total value is as large as possible.
+
+
+**Solution #1**: $m[w]$ to be the maximum value that can be attained with total weight less than or equal to $w$. Then,  $m[W]$ is the solution to the problem.
+
+* $m[0]=0$ (the sum of zero items, i.e., the summation of the empty set)
+* $m[w]=\max _{w_{i}\leq w}(v_{i}+m[w-w_{i}])$, where $v_{i}$ is the value of the i-th kind of item.
+
+**Solution #2**: Define $m[i,w]$ to be the maximum value that can be attained with weight less than or equal to $w$ using items up to $i$ (first $i$ items).
+
+* $m[0,\,w]=0$
+* $m[i,\,w]=m[i-1,\,w]$ $if w_{i}>w$, (the new item is more than the current weight limit)
+* $m[i,\,w]=\max(m[i-1,\,w],\,m[i-1,w-w_{i}]+v_{i})$ $ if w_{i}\leqslant w.$
+
 ##### Source(s) and further reading
 
 * [Dynamic Programming – From Novice to Advanced](https://www.topcoder.com/community/data-science/data-science-tutorials/dynamic-programming-from-novice-to-advanced/)
 * [Longest Increasing Subsequence Size (N log N)](http://www.geeksforgeeks.org/longest-monotonically-increasing-subsequence-size-n-log-n/)
+* [Knapsack problem](https://en.wikipedia.org/wiki/Knapsack_problem)
 
 ## Interview Question
 
